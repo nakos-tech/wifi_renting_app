@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Renting Service</title>
+    <style>
+       
+    </style>
+</head>
+<body>
+     <header>WiFi Renting Service</header>   
+        <nav class="navbar">
+			<li class="link_items"><a href="{{ url_for('login') }}">Login</a>
+            </li>
+        <div class="container">
+        <h2>How to Rent WiFi</h2>
+
+        <div class="steps">
+            <div class="step">
+                <h3>Step 1: Choose a Plan</h3>
+                <p>Browse through our available WiFi rental plans and select the one that suits your needs.</p>
+            </div>
+    
+            <div class="step">
+                <h3>Step 2: Sign Up / Log In</h3>
+                <p>Create an account or log in to proceed with your purchase securely.</p>
+            </div>
+    
+            <div class="step">
+                <h3>Step 3: Make Payment</h3>
+                <p>Pay using your preferred method (Credit Card, PayPal, Mobile Money, etc.).</p>
+            </div>
+    
+            <div class="step">
+                <h3>Step 4: Get Your Access Code</h3>
+                <p>After payment, you will receive a unique access code to connect to the WiFi.</p>
+            </div>
+    
+            <div class="step">
+                <h3>Step 5: Connect & Enjoy</h3>
+                <p>Enter your access code and start browsing the internet seamlessly.</p>
+            </div>
+        </div>
+    </div>
+    </nav>
+ 
+    <div class="container">
+        <!-- Repeat this block for each package -->
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_1" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_2" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_3" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_4" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_5" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_6" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_7" class="buy-btn">Buy Now</a>
+        </div>
+
+        <div class="package">
+            <h3>2 Hours</h3>
+            <p>Ksh 300</p>
+            <a href="buy_now_link_8" class="buy-btn">Buy Now</a>
+        </div>
+    </div>
+        
+        <h2>Contact Us</h2>
+        <div class="referral_section">
+            <h2>Enter Your Referral Code</h2>
+            <p>Use a valid referral code to access the WiFi network instantly.</p>
+            
+            <div class="referral_input_container">
+                <input type="text" id="referral_code" placeholder="Enter your referral code" required>
+                <button onclick="validateReferralCode()">Submit</button>
+            </div>
+            
+            <p id="referral_message"></p>
+        </div>
+        
+    </div>
+    <script src="static/script.js"></script> 
+</body>
+</html>

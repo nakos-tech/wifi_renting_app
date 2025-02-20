@@ -1,0 +1,19 @@
+.plan-link {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Keeps text color */
+    display: block; /* Makes the div clickable */
+}
+
+.plan {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 15px 0;
+    background: white;
+    transition: background 0.3s;
+}
+
+.plan:hover {
+    background: #f0f0f0; /* Hover effect */
+    cursor: pointer;
+}
+
