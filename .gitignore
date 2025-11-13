@@ -1,0 +1,55 @@
+# ========================
+# Python + Flask + SQLite + VS Code
+# ========================
+
+# --- Python bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+
+# --- Environment & secrets ---
+.env
+*.env
+secrets.json
+config.json
+credentials.json
+
+# --- SQLite databases ---
+members.db
+*.db
+*.sqlite3
+
+# --- Logs and temp files ---
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# --- Unit test & coverage ---
+.coverage
+.pytest_cache/
+htmlcov/
+
+# --- Jupyter notebooks checkpoints ---
+.ipynb_checkpoints
+
+# --- IDE/Editor settings ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- Mac and system files ---
+.DS_Store
+Thumbs.db
+
+# --- Node / Frontend (if any JS/CSS tools) ---
+node_modules/
+dist/
+build/

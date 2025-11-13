@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Sign Up</h2>
+        
+        <!-- Display Flash Messages (Flask placeholder) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-3 rounded-md text-sm mb-2 
+                            {% if category == 'success' %}bg-green-100 text-green-700
+                            {% elif category == 'error' %}bg-red-100 text-red-700
+                            {% elif category == 'info' %}bg-blue-100 text-blue-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Sign Up Form -->
+        <form method="POST" class="space-y-4" id="signup_form">
+            {{ form.hidden_tag() }}  <!-- CSRF Token -->
+            <p class="flex flex-col">
+                {{ form.username.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.username(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder="Choose a username") }}
+            </p>
+            <p class="flex flex-col">
+                {{ form.email.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.email(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder="Enter your email") }}
+            </p>
+            <!-- Phone Number Field with Country Code Dropdown -->
+            <p class="flex flex-col">
+                <label for="phone_number_local" class="text-gray-700 text-sm font-medium mb-1">Phone Number</label> 
+                <div class="flex space-x-2">
+                    <select id="country_code" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-1/4">
+                        <option value="+254">+254 (KE)</option>
+                        <option value="+1">+1 (US/CA)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+49">+49 (DE)</option>
+                        <option value="+91">+91 (IN)</option>
+                        <option value="+234">+234 (NG)</option>
+                        <!-- Add more country codes as needed -->
+                    </select>
+                    <input type="tel" id="phone_number_local" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow" placeholder="e.g., 712345678">
+                    <!-- This hidden input will hold the combined value for Flask-WTF -->
+                    {{ form.phone(type="hidden", id="phone_number_full") }}
+                </div>
+            </p>
+            <p class="flex flex-col">
+                {{ form.password.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.password(id="password_field_signup", class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder="Create a password") }}
+            </p>
+            <p class="flex flex-col">
+                {{ form.confirm_password.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.confirm_password(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder="Confirm your password") }}
+            </p>
+            
+            <p>
+                {{ form.submit(class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 ease-in-out shadow-md cursor-pointer") }}
+            </p>
+        </form>
+
+        <!-- Login Section -->
+        <p class="mt-6 text-center text-gray-700">Already have an account? 
+            <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline font-medium">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupForm = document.getElementById('signup_form');
+            const countryCodeSelect = document.getElementById('country_code');
+            const phoneNumberLocalInput = document.getElementById('phone_number_local');
+            const phoneNumberFullInput = document.getElementById('phone_number_full');
+
+            // Set initial value for the hidden full phone number input
+            phoneNumberFullInput.value = countryCodeSelect.value + phoneNumberLocalInput.value;
+
+            // Update the hidden input whenever country code or local number changes
+            countryCodeSelect.addEventListener('change', () => {
+                phoneNumberFullInput.value = countryCodeSelect.value + phoneNumberLocalInput.value;
+            });
+
+            phoneNumberLocalInput.addEventListener('input', () => {
+                phoneNumberFullInput.value = countryCodeSelect.value + phoneNumberLocalInput.value;
+            });
+
+            // Ensure the hidden input is correctly populated on form submission
+            signupForm.addEventListener('submit', (event) => {
+                phoneNumberFullInput.value = countryCodeSelect.value + phoneNumberLocalInput.value;
+            });
+        });
+    </script>
+</body>
+</html>
