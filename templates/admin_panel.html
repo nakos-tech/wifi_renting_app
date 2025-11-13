@@ -1,0 +1,632 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<!-- Debug CSRF Token Info -->
+<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+    <h4 class="font-bold">Debug CSRF Info:</h4>
+    <p><strong>CSRF Token from csrf_token():</strong> <code>{{ csrf_token() }}</code></p>
+    <p><strong>Session CSRF Token:</strong> <code>{{ session.get('csrf_token', 'Not found') }}</code></p>
+    <p><strong>Request method:</strong> {{ request.method }}</p>
+</div>
+
+<div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl shadow-lg min-h-screen">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-center text-gray-800 bg-white p-6 rounded-xl shadow-md">
+            🌐 Admin Dashboard
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="text-3xl">📊</div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Plans</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ wifi_plans|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="text-3xl">👥</div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Users</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ users|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="text-3xl">🟢</div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Users</p>
+                        <p class="text-2xl font-semibold text-gray-900">
+                            {{ users | selectattr('is_active') | list | length }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alert-container" class="mb-6"></div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <div class="flex-1 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-semibold text-gray-800">📋 Wi-Fi Plans</h2>
+                    <button onclick="openAddModal()" 
+                            class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md transform hover:scale-105">
+                        ➕ Add New Plan
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 uppercase text-sm font-semibold">
+                                <th class="py-4 px-6 text-left">Duration</th>
+                                <th class="py-4 px-6 text-left">Amount (KSH)</th>
+                                <th class="py-4 px-6 text-left">Max Devices</th>
+                                <th class="py-4 px-6 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 text-sm">
+                            {% for plan in wifi_plans %}
+                            <tr class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150">
+                                <td class="py-4 px-6 text-left whitespace-nowrap font-medium">{{ plan[1] }}</td>
+                                <td class="py-4 px-6 text-left">
+                                    <span class="text-green-600 font-semibold">KSH {{ plan[2] | int }}</span>
+                                </td>
+                                <td class="py-4 px-6 text-left">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">
+                                        {{ plan[3] or 1 }} devices
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6 text-center">
+                                    <div class="flex item-center justify-center space-x-2">
+                                        <button 
+                                            onclick="openEditModal('{{ plan[1] }}', {{ plan[2] | int }}, {{ plan[3] or 1 }})"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 transform hover:scale-105">
+                                            ✏️ Edit
+                                        </button>
+                                        <button 
+                                            onclick="deletePlan('{{ plan[1] }}')"
+                                            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 transform hover:scale-105">
+                                            🗑️ Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-semibold mb-6 text-gray-800">🏷️ Generate Vouchers</h2>
+                <div class="space-y-4">
+                    <div class="flex flex-col">
+                        <label for="plan_select" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Select Plan
+                        </label>
+                        <select id="plan_select" name="plan_select" 
+                                class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" required>
+                            <option value="" disabled selected>-- Choose a plan --</option>
+                            {% for plan in wifi_plans %}
+                            <option value="{{ plan[1] }}">{{ plan[1] }} - KSH {{ plan[2] | int }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button id="generateVoucherBtn" 
+                            class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md transform hover:scale-105 font-semibold">
+                        ⚡ Generate Voucher
+                    </button>
+                    
+                    <div id="voucher_display_container" class="hidden">
+                        <label for="voucher_code_display" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Generated Voucher Code
+                        </label>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="voucher_code_display" readonly
+                                class="flex-1 px-4 py-3 rounded-lg border-2 border-dashed border-green-500 bg-green-50 text-green-800 font-mono text-center text-xl font-bold tracking-widest cursor-text" 
+                                value="VOUCHERCODE">
+                            <button id="copyVoucherBtn" 
+                                    class="bg-gray-300 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-400 transition-all duration-200">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 mt-8">
+             <div class="flex-1 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-semibold mb-6 text-gray-800">👥 Registered Users</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 uppercase text-sm font-semibold">
+                                <th class="py-4 px-6 text-left">Username</th>
+                                <th class="py-4 px-6 text-left">Email</th>
+                                <th class="py-4 px-6 text-left">Phone</th>
+                                <th class="py-4 px-6 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 text-sm">
+                            {% for user in users %}
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                                <td class="py-4 px-6 text-left whitespace-nowrap font-medium">{{ user.username }}</td>
+                                <td class="py-4 px-6 text-left">{{ user.email }}</td>
+                                <td class="py-4 px-6 text-left">{{ user.phone }}</td>
+                                <td class="py-4 px-6 text-center">
+                                    <span class="
+                                        {% if user.is_active %}
+                                            bg-green-100 text-green-800 border border-green-200
+                                        {% else %}
+                                            bg-red-100 text-red-800 border border-red-200
+                                        {% endif %}
+                                        py-2 px-3 rounded-full text-xs font-semibold inline-flex items-center
+                                    ">
+                                        <div class="w-2 h-2 rounded-full mr-2 
+                                            {% if user.is_active %}bg-green-500{% else %}bg-red-500{% endif %}">
+                                        </div>
+                                        {{ 'Online' if user.is_active else 'Offline' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-semibold mb-6 text-gray-800">🎟️ Generated Vouchers</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 uppercase text-sm font-semibold">
+                                <th class="py-4 px-6 text-left">Code</th>
+                                <th class="py-4 px-6 text-left">Plan</th>
+                                <th class="py-4 px-6 text-left">Amount</th>
+                                <th class="py-4 px-6 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-600 text-sm">
+                            {% for voucher in wifi_vouchers %}
+                            <tr class="border-b border-gray-200 hover:bg-gray-50 transition-colors duration-150">
+                                <td class="py-4 px-6 text-left whitespace-nowrap font-mono font-bold text-gray-800">{{ voucher.voucher_number }}</td>
+                                <td class="py-4 px-6 text-left">{{ voucher.plan_duration }}</td>
+                                <td class="py-4 px-6 text-left">KSH {{ voucher.plan_amount | int }}</td>
+                                <td class="py-4 px-6 text-center">
+                                     <span class="
+                                        {% if voucher.is_used %}
+                                            bg-red-100 text-red-800 border border-red-200
+                                        {% else %}
+                                            bg-green-100 text-green-800 border border-green-200
+                                        {% endif %}
+                                        py-2 px-3 rounded-full text-xs font-semibold inline-flex items-center
+                                    ">
+                                        <div class="w-2 h-2 rounded-full mr-2 
+                                            {% if voucher.is_used %}bg-red-500{% else %}bg-green-500{% endif %}">
+                                        </div>
+                                        {{ 'Used' if voucher.is_used else 'Unused' }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="planModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 backdrop-blur-sm">
+    <div class="relative top-20 mx-auto p-6 border w-full max-w-md shadow-2xl rounded-xl bg-white">
+        <div class="text-center">
+            <h3 class="text-xl font-bold text-gray-900 mb-6" id="modal-title"></h3>
+            <form id="planForm" class="space-y-6" method="post">
+                <input type="hidden" id="old_duration" name="old_duration">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="text-left">
+                    <label for="new_duration" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Duration (e.g., 1 Hour, 1 Day)
+                    </label>
+                    <input type="text" name="new_duration" id="new_duration" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" 
+                           placeholder="e.g., 1 Hour" required>
+                </div>
+                
+                <div class="text-left">
+                    <label for="new_amount" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Amount (KSH)
+                    </label>
+                    <input type="number" name="new_amount" id="new_amount" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" 
+                           placeholder="e.g., 50" min="1" step="0.01" required>
+                </div>
+                
+                <div class="text-left">
+                    <label for="new_devices" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Maximum Devices
+                    </label>
+                    <input type="number" name="new_devices" id="new_devices" 
+                           class="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200" 
+                           placeholder="e.g., 2" min="1" required>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-4 pt-4">
+                    <button type="submit" id="submitButton" 
+                            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105 font-semibold">
+                        💾 Save Plan
+                    </button>
+                    <button type="button" onclick="closeModal('planModal')" 
+                            class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition-all duration-200 font-semibold">
+                        ❌ Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 backdrop-blur-sm">
+    <div class="relative top-20 mx-auto p-6 border w-full max-w-md shadow-2xl rounded-xl bg-white">
+        <div class="text-center">
+            <h3 class="text-xl font-bold text-gray-900 mb-4" id="messageModalTitle"></h3>
+            <p id="messageModalBody" class="text-gray-600 mb-6"></p>
+            <div id="messageModalButtons" class="flex justify-center space-x-4">
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get CSRF token from form (more reliable than meta tag)
+        function getCSRFToken() {
+            const tokenInput = document.querySelector('input[name="csrf_token"]');
+            if (tokenInput && tokenInput.value) {
+                console.log('CSRF Token found:', tokenInput.value);
+                return tokenInput.value;
+            }
+            
+            console.error('CSRF token not found in form');
+            return null;
+        }
+
+        // Elements
+        const planModal = document.getElementById('planModal');
+        const modalTitle = document.getElementById('modal-title');
+        const planForm = document.getElementById('planForm');
+        const oldDurationInput = document.getElementById('old_duration');
+        const newDurationInput = document.getElementById('new_duration');
+        const newAmountInput = document.getElementById('new_amount');
+        const newDevicesInput = document.getElementById('new_devices');
+        const submitButton = document.getElementById('submitButton');
+        
+        const messageModal = document.getElementById('messageModal');
+        const messageModalTitle = document.getElementById('messageModalTitle');
+        const messageModalBody = document.getElementById('messageModalBody');
+        const messageModalButtons = document.getElementById('messageModalButtons');
+
+        let isEditing = false;
+        let confirmCallback = null;
+
+        // Show alerts
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alert-container');
+            const alertClass = type === 'success' 
+                ? 'bg-green-100 border-green-400 text-green-700' 
+                : 'bg-red-100 border-red-400 text-red-700';
+            const icon = type === 'success' ? '✅' : '❌';
+            
+            alertContainer.innerHTML = `
+                <div class="${alertClass} border px-4 py-3 rounded-lg shadow-md mb-4" role="alert">
+                    <div class="flex items-center">
+                        <span class="text-xl mr-3">${icon}</span>
+                        <span>${message}</span>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Modal functions
+        window.openAddModal = function() {
+            modalTitle.textContent = "➕ Add New Wi-Fi Plan";
+            oldDurationInput.value = "";
+            newDurationInput.value = "";
+            newAmountInput.value = "";
+            newDevicesInput.value = "1";
+            submitButton.textContent = "💾 Add Plan";
+            isEditing = false;
+            planModal.classList.remove('hidden');
+            setTimeout(() => newDurationInput.focus(), 100);
+        };
+
+        window.openEditModal = function(duration, amount, devices) {
+            modalTitle.textContent = "✏️ Edit Wi-Fi Plan";
+            oldDurationInput.value = duration;
+            newDurationInput.value = duration;
+            newAmountInput.value = amount;
+            newDevicesInput.value = devices || 1;
+            submitButton.textContent = "💾 Update Plan";
+            isEditing = true;
+            planModal.classList.remove('hidden');
+            setTimeout(() => newDurationInput.focus(), 100);
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        };
+
+        function showMessageModal(title, message, isError = false) {
+            const icon = isError ? '❌' : '✅';
+            messageModalTitle.textContent = `${icon} ${title}`;
+            messageModalBody.textContent = message;
+            messageModalButtons.innerHTML = `
+                <button onclick="closeModal('messageModal')" 
+                        class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-200 font-semibold">
+                    OK
+                </button>
+            `;
+            messageModal.classList.remove('hidden');
+        }
+
+        function showConfirmModal(title, message, callback) {
+            messageModalTitle.textContent = `⚠️ ${title}`;
+            messageModalBody.textContent = message;
+            messageModalButtons.innerHTML = `
+                <button id="confirmButton" 
+                        class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors duration-200 font-semibold">
+                    🗑️ Delete
+                </button>
+                <button onclick="closeModal('messageModal')" 
+                        class="bg-gray-300 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-400 transition-all duration-200 font-semibold">
+                    Cancel
+                </button>
+            `;
+            confirmCallback = callback;
+            document.getElementById('confirmButton').addEventListener('click', () => {
+                if (confirmCallback) {
+                    confirmCallback();
+                }
+                closeModal('messageModal');
+            }, { once: true });
+            messageModal.classList.remove('hidden');
+        }
+
+        // Form submission - Use FormData instead of JSON
+        planForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const originalButtonText = submitButton.textContent;
+            submitButton.textContent = "⏳ Saving...";
+            submitButton.disabled = true;
+
+            try {
+                const csrf_token = getCSRFToken();
+                if (!csrf_token) {
+                    showAlert('Security token is missing. Please refresh the page.', 'error');
+                    return;
+                }
+
+                // Use FormData to send form data (Flask-WTF prefers this)
+                const formData = new FormData();
+                formData.append('csrf_token', csrf_token);
+                
+                if (isEditing) {
+                    formData.append('old_duration', oldDurationInput.value);
+                    formData.append('new_duration', newDurationInput.value.trim());
+                    formData.append('new_amount', newAmountInput.value);
+                    formData.append('new_devices', newDevicesInput.value);
+                } else {
+                    formData.append('wifi_duration', newDurationInput.value.trim());
+                    formData.append('amount', newAmountInput.value);
+                    formData.append('new_devices', newDevicesInput.value);
+                }
+
+                const url = isEditing 
+                    ? "{{ url_for('admin_bp.update_plan') }}"
+                    : "{{ url_for('admin_bp.add_plan') }}";
+
+                console.log('Sending request to:', url);
+                console.log('Form data entries:');
+                for (let pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,  // Send as FormData, not JSON
+                    credentials: 'same-origin'
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Failed to parse JSON:', parseError);
+                    throw new Error(`Server returned invalid JSON: ${responseText.substring(0, 500)}`);
+                }
+
+                if (response.ok && result.success) {
+                    showAlert(result.message || 'Operation completed successfully!', 'success');
+                    closeModal('planModal');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showAlert(result.message || 'An error occurred. Please try again.', 'error');
+                }
+
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showAlert(`Request failed: ${error.message}`, 'error');
+            } finally {
+                submitButton.textContent = originalButtonText;
+                submitButton.disabled = false;
+            }
+        });
+
+        // Delete plan function - Use FormData
+        window.deletePlan = async function(duration) {
+            showConfirmModal(
+                'Delete Plan',
+                `Are you sure you want to delete the "${duration}" plan? This action cannot be undone.`,
+                async () => {
+                    const csrf_token = getCSRFToken();
+                    if (!csrf_token) {
+                        showAlert('Security token is missing. Please refresh the page.', 'error');
+                        return;
+                    }
+    
+                    try {
+                        const formData = new FormData();
+                        formData.append('csrf_token', csrf_token);
+                        formData.append('wifi_duration', duration);
+
+                        const response = await fetch("{{ url_for('admin_bp.delete_plan') }}", {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'same-origin'
+                        });
+
+                        const responseText = await response.text();
+                        console.log('Delete response:', responseText);
+
+                        let result;
+                        try {
+                            result = JSON.parse(responseText);
+                        } catch (parseError) {
+                            throw new Error(`Server returned invalid JSON: ${responseText.substring(0, 500)}`);
+                        }
+
+                        if (response.ok && result.success) {
+                            showAlert(result.message || 'Plan deleted successfully!', 'success');
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            showAlert(result.message || 'Failed to delete plan. Please try again.', 'error');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Delete plan error:', error);
+                        showAlert(`Failed to delete plan: ${error.message}`, 'error');
+                    }
+                }
+            );
+        };
+        
+        // Voucher generation - Use FormData
+        const generateVoucherBtn = document.getElementById('generateVoucherBtn');
+        const planSelect = document.getElementById('plan_select');
+        const voucherDisplayContainer = document.getElementById('voucher_display_container');
+        const voucherCodeDisplay = document.getElementById('voucher_code_display');
+        const copyVoucherBtn = document.getElementById('copyVoucherBtn');
+    
+        generateVoucherBtn.addEventListener('click', async () => {
+            const plan_duration = planSelect.value;
+            const csrf_token = getCSRFToken();
+    
+            if (!plan_duration) {
+                showAlert('Please select a Wi-Fi plan first.', 'error');
+                return;
+            }
+    
+            if (!csrf_token) {
+                showAlert('Security token is missing. Please refresh the page.', 'error');
+                return;
+            }
+    
+            generateVoucherBtn.textContent = "⏳ Generating...";
+            generateVoucherBtn.disabled = true;
+            voucherDisplayContainer.classList.add('hidden');
+    
+            try {
+                const formData = new FormData();
+                formData.append('csrf_token', csrf_token);
+                formData.append('plan_duration', plan_duration);
+
+                const response = await fetch("{{ url_for('admin_bp.generate_voucher') }}", {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin'
+                });
+    
+                const responseText = await response.text();
+                console.log('Voucher response:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(`Server returned invalid JSON: ${responseText.substring(0, 500)}`);
+                }
+    
+                if (response.ok && result.success) {
+                    showAlert(result.message || 'Voucher generated successfully!', 'success');
+                    voucherCodeDisplay.value = result.voucher_code;
+                    voucherDisplayContainer.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        voucherCodeDisplay.select();
+                    }, 100);
+                } else {
+                    showAlert(result.message || 'Failed to generate voucher. Please try again.', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Voucher generation error:', error);
+                showAlert(`Failed to generate voucher: ${error.message}`, 'error');
+            } finally {
+                generateVoucherBtn.textContent = "⚡ Generate Voucher";
+                generateVoucherBtn.disabled = false;
+            }
+        });
+    
+        // Copy voucher code to clipboard
+        copyVoucherBtn.addEventListener('click', async () => {
+            try {
+                voucherCodeDisplay.select();
+                voucherCodeDisplay.setSelectionRange(0, 99999);
+                
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(voucherCodeDisplay.value);
+                } else {
+                    document.execCommand('copy');
+                }
+                
+                showAlert('Voucher code copied to clipboard!', 'success');
+            } catch (error) {
+                console.error('Copy failed:', error);
+                showAlert('Failed to copy voucher code. Please select and copy manually.', 'error');
+            }
+        });
+
+        console.log('Admin panel initialized successfully');
+    });
+</script>
+{% endblock %}

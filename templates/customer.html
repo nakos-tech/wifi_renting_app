@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html >
+<head>
+<!-- <link type="text/css" href="{{url_for('static',filename='webpages.css')}}" rel="stylesheet"/> -->
+<link rel="stylesheet" href="{{url_for('static',filename='customer.css')}}">
+
+<script type="text/javascript" src="{{url_for('static',filename='alert/alertify.min.js')}}"></script>
+<link rel="stylesheet" href="{{url_for('static',filename='alert/alertify.default.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='alert/alertify.core.css')}}">
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet" href="/static/login.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+.h1span{
+			position: relative;
+			bottom: 20px;
+	
+		}
+
+	
+</style>
+<script>
+
+
+function required_login()
+{
+var username=document.forms["form1"]["username"].value;
+var password=document.forms["form1"]["password"].value;
+var x=0;
+	if(username=="")
+	{
+		alert("please input username");
+		document.form1.action="";
+	}
+	else if(password=="")
+	{
+		alert("enter password");
+		document.form1.action="";
+	}
+	else 
+	{
+		{% for x in var %}
+
+			if(username=="{{x[0]}}" && password=="{{x[1]}}")
+			{
+					x=1;
+			}
+		{% endfor %}	
+		
+	
+		if(x==1)	
+		{
+			alertify.log( "welcome "+username, "success" );
+			document.form1.action="http://localhost:5000/customer_logged_in";
+			document.form1.method="post";
+		
+			
+		}
+		else
+		{
+			alert("invalid username/password");
+			document.form1.action="";
+		}
+	}	
+}
+
+</script>
+<script>
+function required_signup()
+{
+var username=document.forms["form2"]["username"].value;
+var password=document.forms["form2"]["password"].value;
+var password2=document.forms["form2"]["password2"].value;
+var y=0;
+if(username=="")
+{
+	alert("enter username");
+	document.form2.action="";
+}
+else if(password==''||password2=='')
+{
+	alert("enter password");
+	document.form2.action="";
+}
+else if(password!=password2)
+{
+	alert("passwords match failed");
+	document.form2.action="";
+}
+else
+{
+	{% for x in var %}
+			if(username=="{{x[0]}}")
+			{
+				y=1;	
+			}
+	{% endfor %}	
+
+
+	if(y==0)
+	{
+		alertify.log( "welcome "+username, "success" );
+		document.form2.action="http://localhost:5000/customer_signed_up";
+		document.form2.method="post";
+	}	
+	else
+	{
+		alert("username already exists")
+		document.form2.action="";
+	}
+}
+
+
+}
+
+</script>
+  <meta charset="UTF-8">
+  <title>Login & Sign Up Form Concept</title>
+  
+
+
+  
+</head>
+
+<body>
+	<header>
+		<nav class="navbar">
+			<img src="/static/foodies.jpeg" alt="" class="logo">
+			<ul class="links_container">
+			<li class="link_items"><a href="http://localhost:5000/" class="links">Home</a></li>
+			</ul>
+		</nav>
+
+	</header>
+	<div class="wrapper">
+		<form  action="/sign_in" method="post">
+			<h1>Login</h1>
+			<div class="input_box">
+				<input type="text" placeholder="Username" name="username" required>
+				<i class="fa-solid fa-user"></i>
+			</div>
+			<div class="input_box">
+				<input type="password" placeholder="Password" name="password" required>
+				<i id="toggle_password" class="fa-solid fa-lock"></i>
+			</div>
+			<div class="remember_forget">
+				<label><input type="checkbox">Remember me</label>
+				<!-- <a href="/forgot_password">Forgot password</a> -->
+			</div>
+			<button type="submit" class="btn">Login</button>
+			<div class="register_link">
+				<p>Don't have an account already? <a href="/sign_up">Register</a></p>
+			</div>
+		</form>
+	
+	</div>
+
+    <script src="{{url_for('static',filename='js/customer.js')}}"></script>
+
+</body>
+
+<script>
+	// About Us Review
+/*
+let reviews = document.querySelectorAll('review_wrapper');
+
+let currentReviews = [0, 2];
+
+let updateReviewSlider = (cards) => {
+    cards.forEach((card_index) => {
+        reviews[card_index].classList.add('active');
+    });
+};
+
+setInterval(() => {
+    currentReviews.forEach((card_index, i) => {
+        reviews[card_index].classList.remove('active');
+
+        currentReviews[i] = card_index >= reviews.length - 1 ? 0 : card_index + 1;
+    });
+
+    setTimeout(() => {
+        updateReviewSlider(currentReviews);
+    }, 250);
+}, 5000);
+
+updateReviewSlider(currentReviews);
+
+//faq
+
+let faqs = [...document.querySelectorAll(".faq")];
+
+faqs.map(faq =>{
+    let ques = faq.querySelector('.question_box')
+
+    ques.addEventListener('click', () => {
+        faq.classList.toggle('.active');
+    })
+})
+
+//dish sliders 
+
+let dishSlider = document.querySelector("dish_slide");
+
+let rotationVal = 0;
+
+setInterval(() => [
+
+    rotationVal = 120;
+
+    dishSlider.computedStyleMap.transform = 'translate(-50%) rotate($[rotateVal]deg)';
+], 3000)
+*/
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.querySelector('input[name="password"]');
+
+togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    this.classList.toggle('fa-lock');
+    this.classList.toggle('fa-unlock');
+});
+
+
+
+</script>
+</html>

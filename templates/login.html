@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h2>
+        
+        <!-- Display Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-4">
+                    {% for category, message in messages %}
+                        <div class="p-3 rounded-md text-sm mb-2 
+                            {% if category == 'success' %}bg-green-100 text-green-700
+                            {% elif category == 'error' %}bg-red-100 text-red-700
+                            {% elif category == 'info' %}bg-blue-100 text-blue-700
+                            {% else %}bg-gray-100 text-gray-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Login Form -->
+        <form method="POST" class="space-y-4">
+            {{ form.hidden_tag() }}  <!-- CSRF Token -->
+            <p class="flex flex-col">
+                {{ form.username.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.username(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+            </p>
+            <p class="flex flex-col">
+                {{ form.password.label(class="text-gray-700 text-sm font-medium mb-1") }} 
+                {{ form.password(id="password_field", class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                <!-- Password Strength Advisor Button -->
+                <button type="button" id="password_strength_button" class="mt-2 bg-purple-600 text-white p-2 rounded-lg font-semibold hover:bg-purple-700 transition duration-300 ease-in-out shadow-md cursor-pointer flex items-center justify-center">
+                    ✨ Check Password Strength
+                </button>
+            </p>
+            <!-- LLM Response Display Area -->
+            <div id="password_strength_result" class="mt-4 p-3 bg-blue-50 rounded-lg text-gray-800 text-sm hidden">
+                <p id="result_text"></p>
+                <div id="loading_indicator" class="hidden flex items-center justify-center">
+                    <svg class="animate-spin h-5 w-5 text-blue-600 mr-3" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Analyzing...</span>
+                </div>
+            </div>
+
+            <p>
+                {{ form.submit(class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 ease-in-out shadow-md cursor-pointer") }}
+            </p>
+        </form>
+
+        <!-- Sign Up Section -->
+        <p class="mt-6 text-center text-gray-700">Don't have an account? 
+            <a href="{{ url_for('sign_up') }}" class="text-blue-600 hover:underline font-medium">Sign up here</a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordField = document.getElementById('password_field');
+            const passwordStrengthButton = document.getElementById('password_strength_button');
+            const passwordStrengthResult = document.getElementById('password_strength_result');
+            const resultText = document.getElementById('result_text');
+            const loadingIndicator = document.getElementById('loading_indicator');
+
+            passwordStrengthButton.addEventListener('click', async () => {
+                const password = passwordField.value;
+                if (password.trim() === '') {
+                    resultText.textContent = 'Please enter a password to check its strength.';
+                    passwordStrengthResult.classList.remove('hidden');
+                    passwordStrengthResult.classList.remove('bg-green-50', 'bg-red-50', 'bg-yellow-50');
+                    passwordStrengthResult.classList.add('bg-blue-50');
+                    return;
+                }
+
+                resultText.textContent = '';
+                loadingIndicator.classList.remove('hidden');
+                passwordStrengthResult.classList.remove('hidden');
+                passwordStrengthResult.classList.remove('bg-green-50', 'bg-red-50', 'bg-yellow-50');
+                passwordStrengthResult.classList.add('bg-blue-50'); // Default background while loading
+
+                try {
+                    let chatHistory = [];
+                    const prompt = `Analyze the following password for its strength and provide detailed feedback. Categorize it as "Very Weak", "Weak", "Moderate", "Strong", or "Very Strong". Suggest specific improvements if it's not "Very Strong". Password: "${password}"`;
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                    const payload = { contents: chatHistory };
+                    const apiKey = ""; // Canvas will provide this at runtime
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+                    let feedback = "Could not get password strength feedback.";
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        feedback = result.candidates[0].content.parts[0].text;
+                    }
+
+                    resultText.textContent = feedback;
+
+                    // Dynamically change background based on perceived strength (simple keyword check)
+                    if (feedback.includes("Very Strong")) {
+                        passwordStrengthResult.classList.remove('bg-blue-50', 'bg-red-50', 'bg-yellow-50');
+                        passwordStrengthResult.classList.add('bg-green-50');
+                    } else if (feedback.includes("Strong")) {
+                        passwordStrengthResult.classList.remove('bg-blue-50', 'bg-red-50', 'bg-yellow-50');
+                        passwordStrengthResult.classList.add('bg-green-50');
+                    } else if (feedback.includes("Moderate")) {
+                        passwordStrengthResult.classList.remove('bg-blue-50', 'bg-red-50', 'bg-green-50');
+                        passwordStrengthResult.classList.add('bg-yellow-50');
+                    } else if (feedback.includes("Weak") || feedback.includes("Very Weak")) {
+                        passwordStrengthResult.classList.remove('bg-blue-50', 'bg-green-50', 'bg-yellow-50');
+                        passwordStrengthResult.classList.add('bg-red-50');
+                    } else {
+                        passwordStrengthResult.classList.remove('bg-green-50', 'bg-red-50', 'bg-yellow-50');
+                        passwordStrengthResult.classList.add('bg-blue-50');
+                    }
+
+
+                } catch (error) {
+                    console.error('Error checking password strength:', error);
+                    resultText.textContent = 'Error checking password strength. Please try again.';
+                    passwordStrengthResult.classList.remove('bg-green-50', 'bg-red-50', 'bg-yellow-50');
+                    passwordStrengthResult.classList.add('bg-blue-50');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

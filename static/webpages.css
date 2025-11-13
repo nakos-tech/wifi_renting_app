@@ -1,0 +1,132 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    padding: 20px 0;
+}
+
+.site-header {
+    background-color: #222;
+    color: #fff;
+    padding: 20px 0;
+    height: 100px;
+
+}
+
+.logo {
+    margin: 0;
+    font-size: 24px;
+}
+
+.nav-menu {
+    float: right;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.navbar {
+    background-color: #f7f7f7;
+    padding: 10px 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    padding: 10px;
+    background: #444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.steps-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.step {
+    flex: 1 1 200px;
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.plans-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.package-card {
+    flex: 1 1 200px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.package-card .price {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.referral-form {
+    margin-top: 10px;
+}
+
+.site-footer {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.social-links {
+    list-style: none;
+    padding: 0;
+}
+
+.social-links li {
+    display: inline;
+    margin: 0 10px;
+}
+
+.social-links a {
+    color: #fff;
+    text-decoration: none;
+}
