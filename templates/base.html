@@ -5,8 +5,8 @@
     <meta name="csrf-token" content="{{ session['csrf_token'] }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My App{% endblock %}</title>
-    <!-- Tailwind CSS CDN for easy styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Production CSS (replaces Tailwind CDN) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
         body {
             font-family: 'Inter', sans-serif;

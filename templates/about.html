@@ -1,73 +1,202 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WiFi Renting Service</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            font-size: 24px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .plan {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .contact-form {
-            margin-top: 20px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            width: 80%;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <header>WiFi Renting Service</header>
-    <div class="container">
-        <h2>Choose Your Plan</h2>
-        <div class="plan">
-            <h3>Basic Plan</h3>
-            <p>$5 / Day</p>
+{% extends 'base.html' %}
+
+{% block title %}About Us — WiFi Hotspot{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-10 text-center mb-8">
+    <div class="text-6xl mb-4">📡</div>
+    <h1 class="text-4xl font-bold text-white mb-3">About WiFi Hotspot</h1>
+    <p class="text-blue-100 text-lg max-w-xl mx-auto">
+        Fast, affordable, and reliable internet access — available whenever and wherever you need it.
+    </p>
+</div>
+
+<!-- Who We Are -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        🌐 Who We Are
+    </h2>
+    <p class="text-gray-600 leading-relaxed mb-3">
+        WiFi Hotspot is a local WiFi renting service dedicated to providing fast, affordable, and 
+        reliable internet access to individuals, households, and small businesses. We believe that 
+        internet access should be simple, flexible, and available to everyone — without long-term 
+        contracts or expensive commitments.
+    </p>
+    <p class="text-gray-600 leading-relaxed">
+        Whether you need internet for an hour, a day, or a week — we have a plan that fits your 
+        needs and budget. Pay only for what you use, when you use it.
+    </p>
+</div>
+
+<!-- Divider -->
+<hr class="border-gray-200 mb-8">
+
+<!-- What We Offer -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        ✨ What We Offer
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
+            <div class="text-4xl mb-3">⚡</div>
+            <h3 class="text-lg font-bold text-blue-800 mb-2">Fast Internet</h3>
+            <p class="text-blue-700 text-sm">
+                High-speed WiFi connection suitable for browsing, streaming, video calls, and working online.
+            </p>
         </div>
-        <div class="plan">
-            <h3>Standard Plan</h3>
-            <p>$20 / Week</p>
+
+        <div class="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+            <div class="text-4xl mb-3">💰</div>
+            <h3 class="text-lg font-bold text-green-800 mb-2">Affordable Plans</h3>
+            <p class="text-green-700 text-sm">
+                Flexible hourly, daily, and weekly plans starting at pocket-friendly prices. Pay via M-Pesa instantly.
+            </p>
         </div>
-        <div class="plan">
-            <h3>Premium Plan</h3>
-            <p>$50 / Month</p>
+
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-6 text-center">
+            <div class="text-4xl mb-3">🔒</div>
+            <h3 class="text-lg font-bold text-purple-800 mb-2">Secure Connection</h3>
+            <p class="text-purple-700 text-sm">
+                Your connection is private and secure. Each voucher gives you dedicated access for your devices.
+            </p>
         </div>
-        
-        <h2>Contact Us</h2>
-        <div class="contact-form">
-            <input type="text" placeholder="Your Name" required><br>
-            <input type="email" placeholder="Your Email" required><br>
-            <button type="submit">Submit</button>
-        </div>
+
     </div>
-</body>
-</html>
+</div>
+
+<!-- Divider -->
+<hr class="border-gray-200 mb-8">
+
+<!-- How It Works -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        🚀 How It Works
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <div class="flex flex-col items-center text-center p-4">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-3">1</div>
+            <h3 class="font-bold text-gray-800 mb-1">Choose a Plan</h3>
+            <p class="text-gray-500 text-sm">Pick the duration and number of devices that suits you.</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center p-4">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-3">2</div>
+            <h3 class="font-bold text-gray-800 mb-1">Pay via M-Pesa</h3>
+            <p class="text-gray-500 text-sm">Complete payment instantly using your Safaricom M-Pesa number.</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center p-4">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-3">3</div>
+            <h3 class="font-bold text-gray-800 mb-1">Get Your Voucher</h3>
+            <p class="text-gray-500 text-sm">Receive your unique voucher code instantly after payment.</p>
+        </div>
+
+        <div class="flex flex-col items-center text-center p-4">
+            <div class="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mb-3">4</div>
+            <h3 class="font-bold text-gray-800 mb-1">Connect & Browse</h3>
+            <p class="text-gray-500 text-sm">Enter your voucher and enjoy fast internet immediately.</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Divider -->
+<hr class="border-gray-200 mb-8">
+
+<!-- Why Choose Us -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        🏆 Why Choose Us
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">No Contracts</h3>
+                <p class="text-gray-600 text-sm">Pay only for what you need. No monthly subscriptions or hidden fees.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">Instant Activation</h3>
+                <p class="text-gray-600 text-sm">Your voucher is activated immediately after M-Pesa payment is confirmed.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">Multiple Devices</h3>
+                <p class="text-gray-600 text-sm">Connect phones, laptops, and tablets — depending on your chosen plan.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">24/7 Availability</h3>
+                <p class="text-gray-600 text-sm">Buy a plan and connect anytime — day or night, weekdays or weekends.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">M-Pesa Payments</h3>
+                <p class="text-gray-600 text-sm">Secure and familiar M-Pesa STK push — no cash, no cards needed.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4 bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-2xl">✅</div>
+            <div>
+                <h3 class="font-bold text-gray-800 mb-1">Local Support</h3>
+                <p class="text-gray-600 text-sm">We are a local Kenyan business. Reach us directly via WhatsApp or call.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Divider -->
+<hr class="border-gray-200 mb-8">
+
+<!-- Contact Section -->
+<div class="bg-gray-800 rounded-xl p-8 text-center">
+    <h2 class="text-2xl font-bold text-white mb-2">📞 Get in Touch</h2>
+    <p class="text-gray-400 mb-6">Have a question or need help? We are here for you.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+        <div class="bg-gray-700 rounded-lg p-4">
+            <div class="text-2xl mb-2">📱</div>
+            <p class="text-gray-300 text-sm font-semibold">WhatsApp / Call</p>
+            <p class="text-white font-bold mt-1">0790848667</p>
+        </div>
+
+        <div class="bg-gray-700 rounded-lg p-4">
+            <div class="text-2xl mb-2">✉️</div>
+            <p class="text-gray-300 text-sm font-semibold">Email</p>
+            <p class="text-white font-bold mt-1">info@wifihotspot.co.ke</p>
+        </div>
+
+        <div class="bg-gray-700 rounded-lg p-4">
+            <div class="text-2xl mb-2">📍</div>
+            <p class="text-gray-300 text-sm font-semibold">Location</p>
+            <p class="text-white font-bold mt-1">Nairobi, Kenya</p>
+        </div>
+
+    </div>
+    <a href="{{ url_for('home') }}"
+       class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+        🌐 View Our Plans
+    </a>
+</div>
+
+{% endblock %}

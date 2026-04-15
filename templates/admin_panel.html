@@ -285,6 +285,137 @@
     </div>
 </div>
 
+<div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    
+    <!-- Header Row -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">💳 Successful Payments</h2>
+        <div class="flex items-center gap-3">
+            <input type="text" id="paymentSearch"
+                   placeholder="Search receipt, phone, voucher..." 
+                   class="px-3 py-2 rounded-lg border-2 border-gray-300 focus:border-blue-500 text-sm focus:outline-none w-64"/>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p class="text-xs text-green-600 font-semibold uppercase tracking-wide">Total Revenue</p>
+            <p class="text-2xl font-bold text-green-700 mt-1">
+                KSh <span id="statRevenue">0.00</span>
+            </p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Total Transactions</p>
+            <p class="text-2xl font-bold text-blue-700 mt-1" id="statCompleted">0</p>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead>
+                <tr class="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 uppercase text-xs font-semibold">
+                    <th class="py-4 px-4">#</th>
+                    <th class="py-4 px-4">id</th>
+                    <th class="py-4 px-4">Amount</th>
+                    <th class="py-4 px-4">Plan Duration</th>
+                    <th class="py-4 px-4">Phone</th>
+                    <th class="py-4 px-4">M-Pesa Receipt</th>
+                    <th class="py-4 px-4">Created_at</th>
+                    <th class="py-4 px-4 text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody id="paymentsTableBody" class="text-gray-600 text-sm divide-y divide-gray-100">
+                <tr>
+                    <td colspan="10" class="py-8 text-center text-gray-400">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                            <span>Loading payments...</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty state -->
+    <div id="paymentsEmpty" class="hidden py-12 text-center text-gray-400">
+        <div class="text-4xl mb-2">💳</div>
+        <p class="font-medium">No successful payments found</p>
+        <p class="text-sm mt-1">Successful payments will appear here once received</p>
+    </div>
+</div>
+
+<!-- ============ ANALYSIS SECTION ============ -->
+<div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-gray-200">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">📊 Weekly Revenue Analysis</h2>
+        <div class="flex items-center gap-3">
+            <!-- Week navigation -->
+            <button id="prevWeek" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                ← Prev Week
+            </button>
+            <span id="weekLabel" class="text-sm font-semibold text-gray-600 min-w-[180px] text-center"></span>
+            <button id="nextWeek" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
+                Next Week →
+            </button>
+        </div>
+    </div>
+
+    <!-- Weekly Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <p class="text-xs text-green-600 font-semibold uppercase tracking-wide">Week Revenue</p>
+            <p class="text-2xl font-bold text-green-700 mt-1">KSh <span id="weekRevenue">0.00</span></p>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Transactions</p>
+            <p class="text-2xl font-bold text-blue-700 mt-1" id="weekTransactions">0</p>
+        </div>
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+            <p class="text-xs text-purple-600 font-semibold uppercase tracking-wide">Best Day</p>
+            <p class="text-2xl font-bold text-purple-700 mt-1" id="weekBestDay">—</p>
+        </div>
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p class="text-xs text-yellow-600 font-semibold uppercase tracking-wide">Daily Average</p>
+            <p class="text-2xl font-bold text-yellow-700 mt-1">KSh <span id="weekAverage">0.00</span></p>
+        </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="relative w-full" style="height: 280px;">
+        <canvas id="revenueChart"></canvas>
+    </div>
+
+    <!-- Daily Breakdown Table -->
+    <div class="mt-6 overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead>
+                <tr class="bg-gradient-to-r from-gray-100 to-gray-200 text-left text-gray-700 uppercase text-xs font-semibold">
+                    <th class="py-3 px-4">Day</th>
+                    <th class="py-3 px-4">Date</th>
+                    <th class="py-3 px-4">Transactions</th>
+                    <th class="py-3 px-4">Revenue</th>
+                    <th class="py-3 px-4">Share of Week</th>
+                </tr>
+            </thead>
+            <tbody id="dailyBreakdownBody" class="text-gray-600 text-sm divide-y divide-gray-100">
+                <tr>
+                    <td colspan="5" class="py-8 text-center text-gray-400">
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                            <span>Loading analysis...</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 backdrop-blur-sm">
     <div class="relative top-20 mx-auto p-6 border w-full max-w-md shadow-2xl rounded-xl bg-white">
         <div class="text-center">
@@ -627,6 +758,301 @@
         });
 
         console.log('Admin panel initialized successfully');
+
+        (function() {
+    let allPayments = [];
+
+    async function loadPayments() {
+        try {
+            const response = await fetch("{{ url_for('admin_bp.get_payments') }}");
+            const data = await response.json();
+
+            if (data.success) {
+                allPayments = data.payments;
+                updateStats(allPayments);
+                renderPayments(allPayments);
+            } else {
+                showTableError("Failed to load payments.");
+            }
+        } catch (err) {
+            console.error("Payment load error:", err);
+            showTableError("Could not connect to server.");
+        }
+    }
+
+    function updateStats(payments) {
+        const revenue  = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+
+        document.getElementById('statRevenue').textContent   = revenue.toFixed(2);
+        document.getElementById('statCompleted').textContent = payments.length;
+    }
+
+    function renderPayments(payments) {
+        const tbody = document.getElementById('paymentsTableBody');
+        const empty = document.getElementById('paymentsEmpty');
+
+        if (!payments.length) {
+            tbody.innerHTML = '';
+            empty.classList.remove('hidden');
+            return;
+        }
+
+        empty.classList.add('hidden');
+
+        tbody.innerHTML = payments.map((p, i) => `
+            <tr class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150">
+                <td class="py-3 px-4 text-gray-400">${i + 1}</td>
+                <td class="py-3 px-4 font-medium text-gray-800">${p.id || '—'}</td>
+                <td class="py-3 px-4 text-green-600 font-semibold">KSh ${parseFloat(p.amount || 0).toFixed(2)}</td>
+                <td class="py-3 px-4">
+                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
+                        ${p.plan_duration || '—'}
+                    </span>
+                </td>
+                <td class="py-3 px-4 font-mono text-gray-700 text-xs">${p.phone || '—'}</td>
+
+                <td class="py-3 px-4 text-center">
+                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
+                        ${p.mpesa_receipt_number || 1}
+                    </span>
+                </td>
+                <td class="py-3 px-4 text-gray-500 text-xs whitespace-nowrap">${p.created_at}</td>
+                <td class="py-3 px-4 text-gray-500 text-xs whitespace-nowrap">${p.status || '—'}</td>
+                <td class="py-3 px-4 text-center">
+                    <span class="py-1 px-3 rounded-full text-xs font-semibold inline-flex items-center border bg-green-100 text-green-800 border-green-200">
+                        <div class="w-2 h-2 rounded-full mr-2 bg-green-500"></div>
+                        Completed
+                    </span>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function showTableError(message) {
+        document.getElementById('paymentsTableBody').innerHTML = `
+            <tr>
+                <td colspan="10" class="py-8 text-center text-red-400">${message}</td>
+            </tr>`;
+    }
+
+    // Search
+    document.getElementById('paymentSearch').addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        const filtered = allPayments.filter(p =>
+            (p.phone_number          || '').toLowerCase().includes(query) ||
+            (p.mpesa_receipt_number  || '').toLowerCase().includes(query) ||
+            (p.plan_duration         || '').toLowerCase().includes(query)
+        );
+        renderPayments(filtered);
+    });
+
+    loadPayments();
+})();
+(function () {
+    const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const SHORT_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    let currentWeekOffset = 0; // 0 = this week, -1 = last week, etc.
+    let chartInstance = null;
+    let allData = [];
+
+    // Get Monday of the week based on offset
+    function getWeekStart(offset) {
+        const now = new Date();
+        const day = now.getDay(); // 0=Sun, 1=Mon...
+        const diffToMonday = (day === 0) ? -6 : 1 - day;
+        const monday = new Date(now);
+        monday.setDate(now.getDate() + diffToMonday + (offset * 7));
+        monday.setHours(0, 0, 0, 0);
+        return monday;
+    }
+
+    function formatDate(date) {
+        return date.toISOString().split('T')[0]; // YYYY-MM-DD
+    }
+
+    function formatDisplay(date) {
+        return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+    }
+
+    function updateWeekLabel(weekStart) {
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        document.getElementById('weekLabel').textContent =
+            `${formatDisplay(weekStart)} – ${formatDisplay(weekEnd)}`;
+
+        // Disable next week if already on current week
+        document.getElementById('nextWeek').disabled = currentWeekOffset >= 0;
+        document.getElementById('nextWeek').classList.toggle('opacity-40', currentWeekOffset >= 0);
+        document.getElementById('nextWeek').classList.toggle('cursor-not-allowed', currentWeekOffset >= 0);
+    }
+
+    async function loadWeekData() {
+        const weekStart = getWeekStart(currentWeekOffset);
+        updateWeekLabel(weekStart);
+
+        const startDate = formatDate(weekStart);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        const endDate = formatDate(weekEnd);
+
+        try {
+            const response = await fetch(`{{ url_for('admin_bp.get_weekly_analysis') }}?start=${startDate}&end=${endDate}`);
+            const data = await response.json();
+
+            if (data.success) {
+                allData = data.days;
+                updateSummaryCards(allData, weekStart);
+                renderChart(allData);
+                renderTable(allData, weekStart);
+            } else {
+                console.error('Failed to load analysis:', data.message);
+            }
+        } catch (err) {
+            console.error('Analysis load error:', err);
+        }
+    }
+
+    function updateSummaryCards(days, weekStart) {
+        const totalRevenue      = days.reduce((s, d) => s + d.revenue, 0);
+        const totalTransactions = days.reduce((s, d) => s + d.transactions, 0);
+        const avgRevenue        = totalRevenue / 7;
+        const bestDayIndex      = days.indexOf(days.reduce((a, b) => a.revenue > b.revenue ? a : b));
+
+        document.getElementById('weekRevenue').textContent      = totalRevenue.toFixed(2);
+        document.getElementById('weekTransactions').textContent = totalTransactions;
+        document.getElementById('weekAverage').textContent      = avgRevenue.toFixed(2);
+
+        const bestDay = new Date(weekStart);
+        bestDay.setDate(weekStart.getDate() + bestDayIndex);
+        document.getElementById('weekBestDay').textContent =
+            totalRevenue > 0 ? SHORT_DAYS[bestDayIndex] : '—';
+    }
+
+    function renderChart(days) {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenues = days.map(d => d.revenue);
+        const maxRevenue = Math.max(...revenues, 1);
+
+        const backgroundColors = revenues.map(v =>
+            v === Math.max(...revenues) && v > 0
+                ? 'rgba(34, 197, 94, 0.85)'   // green for best day
+                : 'rgba(59, 130, 246, 0.7)'    // blue for others
+        );
+
+        const borderColors = revenues.map(v =>
+            v === Math.max(...revenues) && v > 0
+                ? 'rgba(22, 163, 74, 1)'
+                : 'rgba(37, 99, 235, 1)'
+        );
+
+        if (chartInstance) chartInstance.destroy();
+
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: SHORT_DAYS,
+                datasets: [{
+                    label: 'Revenue (KSh)',
+                    data: revenues,
+                    backgroundColor: backgroundColors,
+                    borderColor: borderColors,
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `KSh ${ctx.parsed.y.toFixed(2)}`,
+                            afterLabel: ctx => {
+                                const d = days[ctx.dataIndex];
+                                return `${d.transactions} transaction${d.transactions !== 1 ? 's' : ''}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 13, weight: '600' } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: {
+                            callback: v => `KSh ${v.toLocaleString()}`
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderTable(days, weekStart) {
+        const tbody = document.getElementById('dailyBreakdownBody');
+        const totalRevenue = days.reduce((s, d) => s + d.revenue, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        tbody.innerHTML = days.map((d, i) => {
+            const date = new Date(weekStart);
+            date.setDate(weekStart.getDate() + i);
+            const isToday = date.getTime() === today.getTime();
+            const isFuture = date > today;
+            const share = totalRevenue > 0 ? ((d.revenue / totalRevenue) * 100).toFixed(1) : 0;
+
+            const barWidth = totalRevenue > 0 ? (d.revenue / totalRevenue) * 100 : 0;
+
+            return `
+            <tr class="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-150 ${isToday ? 'bg-blue-50' : ''}">
+                <td class="py-3 px-4 font-semibold text-gray-800">
+                    ${DAYS[i]}
+                    ${isToday ? '<span class="ml-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">Today</span>' : ''}
+                </td>
+                <td class="py-3 px-4 text-gray-500 text-xs">${formatDisplay(date)}</td>
+                <td class="py-3 px-4">
+                    ${isFuture
+                        ? '<span class="text-gray-300 text-xs">—</span>'
+                        : `<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">${d.transactions}</span>`
+                    }
+                </td>
+                <td class="py-3 px-4 font-semibold ${d.revenue > 0 ? 'text-green-600' : 'text-gray-300'}">
+                    ${isFuture ? '—' : `KSh ${d.revenue.toFixed(2)}`}
+                </td>
+                <td class="py-3 px-4 w-48">
+                    ${isFuture ? '<span class="text-gray-300 text-xs">—</span>' : `
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1 bg-gray-100 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                                 style="width: ${barWidth}%"></div>
+                        </div>
+                        <span class="text-xs text-gray-500 w-10 text-right">${share}%</span>
+                    </div>`}
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // Week navigation
+    document.getElementById('prevWeek').addEventListener('click', () => {
+        currentWeekOffset--;
+        loadWeekData();
+    });
+
+    document.getElementById('nextWeek').addEventListener('click', () => {
+        if (currentWeekOffset >= 0) return;
+        currentWeekOffset++;
+        loadWeekData();
+    });
+
+    loadWeekData();
+})();
     });
 </script>
 {% endblock %}

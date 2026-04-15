@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Production CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
-        /* Custom font for Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -37,7 +36,7 @@
         
         <!-- Login Form -->
         <form method="POST" class="space-y-4">
-            {{ form.hidden_tag() }}  <!-- CSRF Token -->
+            {{ form.hidden_tag() }}
             <p class="flex flex-col">
                 {{ form.username.label(class="text-gray-700 text-sm font-medium mb-1") }} 
                 {{ form.username(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
@@ -45,7 +44,6 @@
             <p class="flex flex-col">
                 {{ form.password.label(class="text-gray-700 text-sm font-medium mb-1") }} 
                 {{ form.password(id="password_field", class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500") }}
-                <!-- Password Strength Advisor Button -->
                 <button type="button" id="password_strength_button" class="mt-2 bg-purple-600 text-white p-2 rounded-lg font-semibold hover:bg-purple-700 transition duration-300 ease-in-out shadow-md cursor-pointer flex items-center justify-center">
                     ✨ Check Password Strength
                 </button>
@@ -72,6 +70,8 @@
             <a href="{{ url_for('sign_up') }}" class="text-blue-600 hover:underline font-medium">Sign up here</a>
         </p>
     </div>
+</body>
+</html>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

@@ -1,0 +1,839 @@
+/* ============================================================
+   index.css — Home Page Specific Styles
+   Imports main.css first, then adds page-specific styles.
+   ============================================================ */
+
+/* ── Google Font ──────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Dropdown Animation ───────────────────────────────────── */
+.dropdown-menu {
+    transition: all 0.2s ease-in-out;
+    transform-origin: top;
+}
+
+.dropdown-menu.hidden {
+    opacity: 0;
+    transform: scaleY(0);
+    pointer-events: none;
+}
+
+.dropdown-menu:not(.hidden) {
+    opacity: 1;
+    transform: scaleY(1);
+    pointer-events: auto;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+header {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+header h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 2.25rem;
+}
+
+header nav ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+}
+
+header nav a {
+    font-size: 1.125rem;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 200ms;
+}
+
+header nav a:hover {
+    color: #bfdbfe;
+}
+
+/* ── Body Layout ──────────────────────────────────────────── */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main.flex-grow {
+    flex: 1 1 auto;
+}
+
+/* ── Navbar / Plan Selector Section ──────────────────────── */
+.navbar-section {
+    background: #ffffff;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+    margin-bottom: 2rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    margin-top: 2rem;
+    max-width: 64rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.navbar-section .inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.navbar-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* ── Dropdown ─────────────────────────────────────────────── */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+}
+
+.dropdown-btn {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+    transition: background-color 200ms;
+}
+
+.dropdown-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    margin-top: 0.5rem;
+    width: 14rem;
+    border-radius: 0.375rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    background-color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
+    z-index: 50;
+    outline: none;
+}
+
+.dropdown-menu .py-1 {
+    padding: 0.25rem 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #1f2937;
+    text-decoration: none;
+    transition: background-color 150ms;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f3f4f6;
+}
+
+/* ── How to Rent Section ──────────────────────────────────── */
+.how-to-section {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    margin-bottom: 2rem;
+}
+
+.how-to-section h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.step {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    transition: box-shadow 200ms, transform 200ms;
+}
+
+.step:hover {
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+}
+
+.step h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-bottom: 0.5rem;
+}
+
+.step p {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* ── WiFi Packages Section ────────────────────────────────── */
+.wifi-packages {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    margin-bottom: 2rem;
+}
+
+.wifi-packages h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.package-card {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.07);
+    transition: transform 200ms, box-shadow 200ms;
+}
+
+.package-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(0,0,0,.12);
+}
+
+.package-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #15803d;
+    margin-bottom: 0.5rem;
+}
+
+.package-card .price {
+    font-size: 1.25rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.package-card .devices {
+    font-size: 1rem;
+    color: #4b5563;
+    margin-bottom: 1rem;
+}
+
+.package-card .btn {
+    display: inline-block;
+    background-color: #16a34a;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    transition: background-color 200ms, transform 150ms;
+}
+
+.package-card .btn:hover {
+    background-color: #15803d;
+    transform: scale(1.03);
+}
+
+/* ── Referral / Voucher Section ───────────────────────────── */
+.referral-section {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.referral-section h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.referral-section > p {
+    color: #374151;
+    margin-bottom: 1.5rem;
+}
+
+.referral-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.referral-form input {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    width: 100%;
+    max-width: 24rem;
+    font-size: 0.875rem;
+    transition: border-color 200ms, box-shadow 200ms;
+}
+
+.referral-form input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+}
+
+.referral-form button {
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+    transition: background-color 200ms;
+    white-space: nowrap;
+}
+
+.referral-form button:hover {
+    background-color: #1d4ed8;
+}
+
+#referral_message {
+    margin-top: 1rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+/* ── Loading Spinner (inline) ─────────────────────────────── */
+#loading_spinner {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.75rem;
+}
+
+#loading_spinner svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #2563eb;
+}
+
+/* ── Payment Modal ────────────────────────────────────────── */
+#paymentModal,
+#successModal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+#paymentModal.flex,
+#successModal.flex {
+    display: flex;
+}
+
+#paymentModal > div,
+#successModal > div {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,.25);
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 1rem;
+    transform: scale(1);
+    transition: transform 200ms;
+}
+
+/* Modal Header */
+.modal-header {
+    background: linear-gradient(to right, #16a34a, #15803d);
+    color: #ffffff;
+    padding: 1.5rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.modal-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.modal-header p {
+    font-size: 0.875rem;
+    color: #bbf7d0;
+    margin-top: 0.25rem;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* Plan Details Box */
+.plan-details {
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.plan-details .plan-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.plan-details .plan-row:last-child {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.plan-details .label {
+    color: #4b5563;
+}
+
+.plan-details .value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.plan-details .total-label {
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.plan-details .total-value {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #15803d;
+}
+
+/* Phone Input Group */
+.phone-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.phone-input-group label {
+    display: block;
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.phone-input-wrapper {
+    position: relative;
+}
+
+.phone-prefix {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.phone-input-wrapper input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 4rem;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 200ms;
+}
+
+.phone-input-wrapper input:focus {
+    border-color: #16a34a;
+}
+
+.phone-hint {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+#phoneError {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Loading State */
+#loadingState {
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    border: 3px solid transparent;
+    border-bottom-color: #16a34a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.75rem;
+}
+
+#loadingState p:first-of-type {
+    font-weight: 600;
+    color: #374151;
+}
+
+#loadingState p:last-of-type {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+/* Modal Buttons */
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 200ms;
+}
+
+#cancelBtn {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+#cancelBtn:hover {
+    background-color: #d1d5db;
+}
+
+#proceedBtn {
+    background-color: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+}
+
+#proceedBtn:hover {
+    background-color: #15803d;
+}
+
+/* ── Success Modal ────────────────────────────────────────── */
+.success-icon {
+    width: 5rem;
+    height: 5rem;
+    background-color: #dcfce7;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+
+.success-icon svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #16a34a;
+}
+
+#successModal > div {
+    padding: 2rem;
+    text-align: center;
+}
+
+#successModal h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+}
+
+#successModal p {
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+}
+
+#closeSuccessBtn {
+    background-color: #16a34a;
+    color: #ffffff;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 200ms;
+}
+
+#closeSuccessBtn:hover {
+    background-color: #15803d;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.site-footer {
+    background-color: #1f2937;
+    color: #ffffff;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    margin-top: 2rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.footer-content p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.social-links a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 200ms;
+}
+
+.social-links a:hover {
+    color: #60a5fa;
+}
+
+.copyright {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+
+/* Mobile (< 640px) */
+@media (max-width: 639px) {
+
+    header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+        padding: 0.75rem 1rem;
+    }
+
+    header h1 {
+        font-size: 1.375rem;
+    }
+
+    header nav ul {
+        justify-content: center;
+    }
+
+    .navbar-section .inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar-section h2 {
+        font-size: 1.25rem;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+        right: auto;
+        left: 0;
+    }
+
+    .how-to-section,
+    .wifi-packages,
+    .referral-section {
+        padding: 1.25rem 1rem;
+    }
+
+    .how-to-section h2,
+    .wifi-packages h2,
+    .referral-section h2 {
+        font-size: 1.375rem;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .referral-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .referral-form input {
+        max-width: 100%;
+    }
+
+    .referral-form button {
+        width: 100%;
+    }
+
+    #paymentModal > div,
+    #successModal > div {
+        margin: 0 0.75rem;
+        border-radius: 0.75rem;
+    }
+
+    .modal-header {
+        padding: 1.25rem;
+    }
+
+    .modal-header h3 {
+        font-size: 1.25rem;
+    }
+
+    .modal-body {
+        padding: 1.25rem;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .social-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* Small tablets (640px – 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
+
+    .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .referral-form {
+        flex-direction: row;
+    }
+}
+
+/* Tablets (768px – 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+    .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .navbar-section .inner {
+        flex-direction: row;
+    }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+
+    .plans-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .steps {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .package-card .btn,
+    .dropdown-btn,
+    .referral-form button,
+    #proceedBtn,
+    #cancelBtn,
+    #closeSuccessBtn {
+        min-height: 44px;
+    }
+
+    .package-card:hover {
+        transform: none;
+    }
+
+    .step:hover {
+        transform: none;
+    }
+}

@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Production CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <style>
-        /* Custom font for Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
@@ -18,7 +17,7 @@
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Sign Up</h2>
         
-        <!-- Display Flash Messages (Flask placeholder) -->
+        <!-- Display Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="mb-4">
@@ -37,7 +36,7 @@
         
         <!-- Sign Up Form -->
         <form method="POST" class="space-y-4" id="signup_form">
-            {{ form.hidden_tag() }}  <!-- CSRF Token -->
+            {{ form.hidden_tag() }}
             <p class="flex flex-col">
                 {{ form.username.label(class="text-gray-700 text-sm font-medium mb-1") }} 
                 {{ form.username(class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder="Choose a username") }}
@@ -57,10 +56,8 @@
                         <option value="+49">+49 (DE)</option>
                         <option value="+91">+91 (IN)</option>
                         <option value="+234">+234 (NG)</option>
-                        <!-- Add more country codes as needed -->
                     </select>
                     <input type="tel" id="phone_number_local" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow" placeholder="e.g., 712345678">
-                    <!-- This hidden input will hold the combined value for Flask-WTF -->
                     {{ form.phone(type="hidden", id="phone_number_full") }}
                 </div>
             </p>
@@ -83,7 +80,8 @@
             <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline font-medium">Login here</a>
         </p>
     </div>
-
+</body>
+</html>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const signupForm = document.getElementById('signup_form');

@@ -258,3 +258,75 @@ def generate_voucher():
     except Exception as e:
         logging.error(f"Voucher generation error: {str(e)}")
         return jsonify({'success': False, 'message': f'An error occurred: {str(e)}'}), 500
+
+@admin_bp.route('/get_payments')
+def get_payments():
+    db = get_db_wifi()
+    cursor = db.cursor()
+
+    # fetch all successful payments 
+    try:
+        cursor.execute("""
+        
+        SELECT p.id, p.plan_duration, p.amount, p.phone, p.mpesa_receipt_number, p.created_at, p.status
+
+        FROM payments p 
+        LEFT JOIN payment_vouchers pv ON pv.payment_id = p.id
+        WHERE p.status = "completed"
+        ORDER BY p.id
+        """
+        )
+
+        rows = cursor.fetchall()
+        payments = [dict(row) for row in rows]
+        return jsonify({"success": True, "payments": payments})
+    except Exception as e:
+        logging.error(f"Error fetching payments: {str(e)}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@admin_bp.route('/get_weekly_analysis')
+def get_weekly_analysis():
+    db = get_db_wifi()
+    cursor = db.cursor()
+    try:
+        start_date = request.args.get('start')
+        end_date   = request.args.get('end')
+
+        if not start_date or not end_date:
+            return jsonify({'success': False, 'message': 'Missing date range'}), 400
+
+        cursor.execute("""
+            SELECT 
+                DATE(transaction_date) as day,
+                COUNT(*) as transactions,
+                SUM(amount) as revenue
+            FROM payments
+            WHERE status = 'completed'
+              AND DATE(transaction_date) BETWEEN ? AND ?
+            GROUP BY DATE(transaction_date)
+            ORDER BY day ASC
+        """, (start_date, end_date))
+
+        rows = cursor.fetchall()
+
+        # Build a full 7-day result Mon–Sun, filling missing days with zeros
+        from datetime import datetime, timedelta
+        result = []
+        start = datetime.strptime(start_date, '%Y-%m-%d')
+
+        daily_map = {row['day']: row for row in rows}
+
+        for i in range(7):
+            date_str = (start + timedelta(days=i)).strftime('%Y-%m-%d')
+            row = daily_map.get(date_str)
+            result.append({
+                'date':         date_str,
+                'transactions': row['transactions'] if row else 0,
+                'revenue':      float(row['revenue']) if row and row['revenue'] else 0.0
+            })
+
+        return jsonify({'success': True, 'days': result})
+
+    except Exception as e:
+        logging.error(f"Weekly analysis error: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500

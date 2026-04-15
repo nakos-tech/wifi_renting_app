@@ -18,6 +18,7 @@ routeros-api==0.18.1
 
 # --- Security & Validation ---
 WTForms==3.1.2
+Werkzeug==3.0.3
 
 # --- Optional utilities ---
 gunicorn==22.0.0          # For deploying on production servers
